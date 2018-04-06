@@ -1,6 +1,10 @@
-# Playground
+# Pommerman custom environment for simulating emergency resource management(Fire Deparment) based on [San Diego government's dataset](https://data.sandiego.gov/datasets/fire-incidents/)
 
-#### First time? check out our [website](https://www.pommerman.com) for more information and our [Discord](https://discordapp.com/invite/wjVJEDc) to join the community.
+This is an academic fork of the Pommerman environment for the purpose of simulation of recorded fire incidents on a grid world, discretised based on geolocation tags. Using the playground setup, we develop AI agents that learn to better respond to fire incidents in real-time situations.
+
+#### Check out original [Playground](https://github.com/MultiAgentLearning/playground),their website [website](https://www.pommerman.com) for more information and the [Discord](https://discordapp.com/invite/wjVJEDc) to join the community.
+
+## Original Readme. 
 
 Playground hosts Pommerman, a clone of Bomberman built for AI research. People from around the world submit agents that they've trained to play. We run regular competitions on our servers and report the results and replays.
 
