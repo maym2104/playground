@@ -2,7 +2,7 @@
 
 This is an academic fork of the Pommerman environment for the purpose of simulation of recorded fire incidents on a grid world, discretised based on geolocation tags. Using the playground setup, we develop AI agents that learn to better respond to fire incidents in real-time situations.
 
-#### Check out original [Playground](https://github.com/MultiAgentLearning/playground),their website [website](https://www.pommerman.com) for more information and the [Discord](https://discordapp.com/invite/wjVJEDc) to join the community.
+#### Check out original [Playground](https://github.com/MultiAgentLearning/playground), their [website](https://www.pommerman.com) for more information and the [Discord](https://discordapp.com/invite/wjVJEDc) to join their community.
 
 ## Original Readme. 
 
