@@ -37,3 +37,11 @@ The setup for submitting agents will be live shortly. It involves making a [Dock
 #### How can I help?
 
 To see the ways you can get invovled with the project head over to our [Contributing Guide](https://github.com/MultiAgentLearning/playground/blob/master/CONTRIBUTING.md) and checkout our current [issues](https://github.com/MultiAgentLearning/playground/issues).
+
+# Contributing
+
+See [CONTRIBUTING](../CONTRIBUTING.md)
+
+# Code of Conduct
+
+See [CODE OF CONDUCT](../CODE_OF_CONDUCT.md)
