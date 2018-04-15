@@ -124,8 +124,9 @@ class Pomme(gym.Env):
             self._board, self._agents, self._bombs, self._is_partially_observable, self._agent_view_size)
         return self.observations
 
-    def _get_rewards(self):
-        return self.model.get_rewards(self._agents, self._game_type, self._step_count, self._max_steps)
+    def _get_rewards(self, rewards):
+        # return self.model.get_rewards(self._agents, self._game_type, self._step_count, self._max_steps)
+        return list(rewards.values())
 
     def _get_done(self):
         return self.model.get_done(self._agents, self._step_count, self._max_steps, self._game_type, self.training_agent)
@@ -160,12 +161,12 @@ class Pomme(gym.Env):
         return [seed]
 
     def step(self, actions):
-        self._board, self._agents, self._bombs, self._items, self._flames = self.model.step(
+        self._board, self._agents, self._bombs, self._items, self._flames, rewards = self.model.step(
             actions, self._board, self._agents, self._bombs, self._items, self._flames)
 
         done = self._get_done()
         obs = self.get_observations()
-        reward = self._get_rewards()
+        reward = self._get_rewards(rewards)
         info = self._get_info(done, reward)
 
         self._step_count += 1
@@ -321,7 +322,7 @@ class Pomme(gym.Env):
             self._bombs.append(characters.Bomb(
                 bomber, tuple(b['position']), int(b['life']),
                 int(b['blast_strength']), b['moving_direction']))
-                                    
+
 
         self._flames = []
         flameArray = json.loads(self._init_game_state['flames'])

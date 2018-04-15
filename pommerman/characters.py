@@ -163,4 +163,3 @@ class Flame(object):
             "position": self.position,
             "life": self._life
         }
-
