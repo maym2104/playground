@@ -89,7 +89,7 @@ class Result(Enum):
 
 class StateReward(Enum):
     BreakWood = 0.02
-    CollectItem = 0.1
+    CollectItem = 1
     Kill = 0.4
     LastStanding = 1.0
     Killed = -1.0

@@ -19,6 +19,8 @@ from .. import forward_model
 from .. import utility
 import csv
 
+import random
+
 
 class Pomme(gym.Env):
     metadata = {
@@ -53,7 +55,12 @@ class Pomme(gym.Env):
         f=open(kwargs.get("data_file", None))
         self.obs_reader=csv.DictReader(f)
         # header=self.obs_reader.next()
-        self.current_obs_row=next(self.obs_reader)
+        n=random.randint(1, 14e4)
+        for i in range(n):
+            self.current_obs_row=next(self.obs_reader)
+        self.obs_start_time=int(self.current_obs_row['t'])
+
+
         self.model = forward_model.ForwardModel()
 
         # Observation and Action Spaces. These are both geared towards a single
@@ -169,19 +176,19 @@ class Pomme(gym.Env):
         new_items=[]
         try:
             while True:
-                if int(self.current_obs_row['t'].strip())<=self._step_count:
+                if int(self.current_obs_row['t'].strip())-self.obs_start_time<=self._step_count:
                     new_items.append((int(self.current_obs_row['x']),(int(self.current_obs_row['y']))))
                 else:
                     break
                 self.current_obs_row=next(self.obs_reader)
         except StopIteration:
-            self.current_obs_row={'t':"10001"}
+            self.current_obs_row={'t':str(self.obs_start_time+10001)}
 
         self.make_items(new_items)
 
 
 
-        
+
         self._board, self._agents, self._bombs, self._items, self._flames, rewards = self.model.step(
             actions, self._board, self._agents, self._bombs, self._items, self._flames)
 
