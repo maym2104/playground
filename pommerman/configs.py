@@ -15,6 +15,7 @@ import ruamel.yaml as yaml
 from . import constants
 from . import envs
 from . import characters
+import csv as csv
 
 
 def firetruck_v0_env():
@@ -25,14 +26,14 @@ def firetruck_v0_env():
     env_id = 'FiretruckFFA-v0'
     env_kwargs = {
         'game_type': game_type,
-        'board_size': 15,
-        'agent_view_size': 15,
+        'board_size': 13,
+        'agent_view_size': 13,
         'num_rigid': 0,
         'num_wood': 0,
         'num_items': 0,
         'max_steps': 10000,
-        'render_fps': 1000,
-        'data_file': None,
+        'render_fps': 100,
+        'data_file': "out.csv",
     }
     agent = characters.Bomber
     return locals()

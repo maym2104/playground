@@ -105,6 +105,12 @@ class ForwardModel(object):
              curr_flames):
         board_size = len(curr_board)
 
+        for pos in curr_items:
+            curr_board[pos]=constants.Item.IncrRange.value
+
+
+
+
         # Generate rewards for agents.
         rewards = dict([(agent.agent_id, 0) for agent in curr_agents])
 
@@ -191,6 +197,7 @@ class ForwardModel(object):
             if utility.position_is_powerup(curr_board, agent.position):
                 agent.pick_up(constants.Item(curr_board[agent.position]))
                 curr_board[agent.position] = constants.Item.Passage.value
+                del curr_items[agent.position]
                 rewards[agent.agent_id] += constants.StateReward.CollectItem.value
 
         # Explode bombs.
@@ -258,6 +265,8 @@ class ForwardModel(object):
             curr_flames.append(characters.Flame((row, col)))
         for flame in curr_flames:
             curr_board[flame.position] = constants.Item.Flames.value
+
+        
 
         return curr_board, curr_agents, curr_bombs, curr_items, curr_flames, rewards
 

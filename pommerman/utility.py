@@ -126,20 +126,20 @@ def make_board(size, num_rigid=0, num_wood=0):
     return board
 
 
-def make_items(board, num_items):
-    item_positions = {}
-    while num_items > 0:
-        row = random.randint(0, len(board)-1)
-        col = random.randint(0, len(board[0])-1)
-        if board[row, col] != constants.Item.Wood.value:
-            continue
+def make_items(item_positions,new_items):
+    
+
+    for item in new_items:
+        row = item[0]
+        col = item[1]
+        
         if (row, col) in item_positions:
             continue
 
         item_positions[(row, col)] = random.choice([
-            constants.Item.ExtraBomb, constants.Item.IncrRange, constants.Item.Kick, constants.Item.Skull
+            constants.Item.IncrRange
         ]).value
-        num_items -= 1
+    
     return item_positions
 
 
