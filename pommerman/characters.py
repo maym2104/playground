@@ -11,7 +11,7 @@ class Bomber(object):
 
     def __init__(self, agent_id=None, game_type=None):
         self._game_type = game_type
-        self.ammo = 1
+        self.ammo = 0
         self.is_alive = True
         self.blast_strength = constants.DEFAULT_BLAST_STRENGTH
         self.can_kick = False
@@ -38,7 +38,7 @@ class Bomber(object):
         return None
 
     def incr_ammo(self):
-        self.ammo += 1
+        self.ammo += 0
 
     def get_next_position(self, direction):
         action = constants.Action(direction)
@@ -60,7 +60,7 @@ class Bomber(object):
     def set_start_position(self, start_position):
         self.start_position = start_position
 
-    def reset(self, ammo=1, is_alive=True, blast_strength=None, can_kick=False):
+    def reset(self, ammo=0, is_alive=True, blast_strength=None, can_kick=False):
         self.position = self.start_position
         self.ammo = ammo
         self.is_alive = is_alive

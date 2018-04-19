@@ -17,6 +17,26 @@ from . import envs
 from . import characters
 
 
+def firetruck_v0_env():
+    """Start up a FFA config with the default settings."""
+    env = envs.v0.Pomme
+    game_type = constants.GameType.FFA
+    env_entry_point = 'pommerman.envs.v0:Pomme'
+    env_id = 'FiretruckFFA-v0'
+    env_kwargs = {
+        'game_type': game_type,
+        'board_size': 15,
+        'agent_view_size': 15,
+        'num_rigid': 0,
+        'num_wood': 0,
+        'num_items': 0,
+        'max_steps': 10000,
+        'render_fps': 1000,
+        'data_file': None,
+    }
+    agent = characters.Bomber
+    return locals()
+
 def ffa_v0_env():
     """Start up a FFA config with the default settings."""
     env = envs.v0.Pomme

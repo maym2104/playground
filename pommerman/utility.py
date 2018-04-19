@@ -91,18 +91,18 @@ def make_board(size, num_rigid=0, num_wood=0):
             coordinates.remove((i, size-2))
             coordinates.remove((size-2, i))
 
-        # Lay down wooden walls providing guaranteed passage to other agents.
-        wood = constants.Item.Wood.value
-        for i in range(4, size-4):
-            board[1, i] = wood
-            board[size-i-1, 1] = wood
-            board[size-2, size-i-1] = wood
-            board[size-i-1, size-2] = wood
-            coordinates.remove((1, i))
-            coordinates.remove((size-i-1, 1))
-            coordinates.remove((size-2, size-i-1))
-            coordinates.remove((size-i-1, size-2))
-            num_wood -= 4
+        # # Lay down wooden walls providing guaranteed passage to other agents.
+        # wood = constants.Item.Wood.value
+        # for i in range(4, size-4):
+        #     board[1, i] = wood
+        #     board[size-i-1, 1] = wood
+        #     board[size-2, size-i-1] = wood
+        #     board[size-i-1, size-2] = wood
+        #     coordinates.remove((1, i))
+        #     coordinates.remove((size-i-1, 1))
+        #     coordinates.remove((size-2, size-i-1))
+        #     coordinates.remove((size-i-1, size-2))
+        #     num_wood -= 4
 
         # Lay down the rigid walls.
         while num_rigid > 0:
@@ -170,7 +170,7 @@ def inaccessible_passages(board, agent_positions):
             seen.add(next_position)
             Q.append(next_position)
     return positions
-    
+
 
 def is_valid_direction(board, position, direction, invalid_values=None):
     row, col = position
