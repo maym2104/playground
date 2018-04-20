@@ -159,8 +159,13 @@ class Pomme(gym.Env):
             self._powerups = []
             for agent_id, agent in enumerate(self._agents):
                 pos = np.where(self._board == utility.agent_value(agent_id))
+
                 row = pos[0][0]
                 col = pos[1][0]
+                if agent_id!=3:
+                    self._board[pos]=constants.Item.Passage.value
+                    row=100
+                    col=100
                 agent.set_start_position((row, col))
                 agent.reset()
             self.obs_file_handle.close()

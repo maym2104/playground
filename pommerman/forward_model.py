@@ -175,13 +175,13 @@ class ForwardModel(object):
             else:
                 next_positions[agent.agent_id] = None
 
-        counter = make_counter(next_positions)
-        while has_position_conflict(counter):
-            for next_position, agent_ids in counter.items():
-                if next_position and len(agent_ids) > 1:
-                    for agent_id in agent_ids:
-                        next_positions[agent_id] = curr_positions[agent_id]
-            counter = make_counter(next_positions)
+        # counter = make_counter(next_positions)
+        # while has_position_conflict(counter):
+        #     for next_position, agent_ids in counter.items():
+        #         if next_position and len(agent_ids) > 1:
+        #             for agent_id in agent_ids:
+        #                 next_positions[agent_id] = curr_positions[agent_id]
+        #     counter = make_counter(next_positions)
 
         for agent, curr_position, next_position, direction in zip(curr_agents, curr_positions, next_positions, actions):
             if not agent.is_alive:
@@ -194,7 +194,7 @@ class ForwardModel(object):
                     if bombs:
                         bombs[0].moving_direction = constants.Action(direction)
 
-            if utility.position_is_powerup(curr_board, agent.position):
+            if agent.agent_id==3 and utility.position_is_powerup(curr_board, agent.position):
                 agent.pick_up(constants.Item(curr_board[agent.position]))
                 curr_board[agent.position] = constants.Item.Passage.value
                 rewards[agent.agent_id] += float(constants.StateReward.CollectItem.value) - 0.01 *(curr_step_count-curr_items[agent.position])
@@ -241,7 +241,7 @@ class ForwardModel(object):
 
         # Kill these agents.
         for agent in curr_agents:
-            if agent.in_range(exploded_map):
+            if agent.agent_id==3 and  agent.in_range(exploded_map):
                 agent.die()
                 rewards[agent.agent_id] += constants.StateReward.Killed.value
                 for bomb in before_bombs:
@@ -255,10 +255,11 @@ class ForwardModel(object):
             curr_board[bomb.position] = constants.Item.Bomb.value
 
         for agent in curr_agents:
-            position = np.where(curr_board == utility.agent_value(agent.agent_id))
-            curr_board[position] = constants.Item.Passage.value
-            if agent.is_alive:
-                curr_board[agent.position] = utility.agent_value(agent.agent_id)
+            if agent.agent_id==3:
+                position = np.where(curr_board == utility.agent_value(agent.agent_id))
+                curr_board[position] = constants.Item.Passage.value
+                if agent.is_alive:
+                    curr_board[agent.position] = utility.agent_value(agent.agent_id)
 
         flame_positions = np.where(exploded_map == 1)
         for row, col in zip(flame_positions[0], flame_positions[1]):

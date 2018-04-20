@@ -16,7 +16,7 @@ HUMAN_FACTOR = 32
 DEFAULT_BLAST_STRENGTH = 3
 DEFAULT_BOMB_LIFE = 25
 # color for each of the 4 agents
-AGENT_COLORS = [[231,76,60], [46,139,87], [65,105,225], [238,130,238]]
+AGENT_COLORS = [[240,248,255], [240,248,255], [240,248,255], [238,130,238]]
 # color for each of the items.
 ITEM_COLORS = [[240,248,255], [128,128,128], [210,180,140], [255, 153, 51],
                [241, 196, 15], [141, 137, 124]]
