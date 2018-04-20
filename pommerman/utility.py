@@ -130,15 +130,15 @@ def make_items(item_positions,new_items):
     
 
     for item in new_items:
-        row = item[0]
-        col = item[1]
+        row = item[0][0]
+        col = item[0][1]
         
         if (row, col) in item_positions:
             continue
-
-        item_positions[(row, col)] = random.choice([
-            constants.Item.IncrRange
-        ]).value
+        item_positions[(row,col)]=item[1]
+        # item_positions[(row, col)] = random.choice([
+        #     constants.Item.IncrRange
+        # ]).value
     
     return item_positions
 

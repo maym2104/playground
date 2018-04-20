@@ -31,7 +31,7 @@ def firetruck_v0_env():
         'num_rigid': 0,
         'num_wood': 0,
         'num_items': 0,
-        'max_steps': 10000,
+        'max_steps': 1000,
         'render_fps': 100,
         'data_file': "training.csv",
     }

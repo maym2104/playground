@@ -183,7 +183,8 @@ class Pomme(gym.Env):
         try:
             while True:
                 if int(self.current_obs_row['t'].strip())-self.obs_start_time<=self._step_count:
-                    new_items.append((int(self.current_obs_row['x']),(int(self.current_obs_row['y']))))
+                    new_item=((int(self.current_obs_row['x']),(int(self.current_obs_row['y']))),self._step_count)
+                    new_items.append(new_item)
                 else:
                     break
                 self.current_obs_row=next(self.obs_reader)
@@ -196,7 +197,7 @@ class Pomme(gym.Env):
 
 
         self._board, self._agents, self._bombs, self._items, self._flames, rewards = self.model.step(
-            actions, self._board, self._agents, self._bombs, self._items, self._flames)
+            actions, self._board, self._agents, self._bombs, self._items, self._flames,self._step_count)
 
         done = self._get_done()
         obs = self.get_observations()

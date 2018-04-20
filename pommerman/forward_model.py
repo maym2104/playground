@@ -102,7 +102,7 @@ class ForwardModel(object):
 
     @staticmethod
     def step(actions, curr_board, curr_agents, curr_bombs, curr_items,
-             curr_flames):
+             curr_flames,curr_step_count):
         board_size = len(curr_board)
 
         for pos in curr_items:
@@ -197,8 +197,8 @@ class ForwardModel(object):
             if utility.position_is_powerup(curr_board, agent.position):
                 agent.pick_up(constants.Item(curr_board[agent.position]))
                 curr_board[agent.position] = constants.Item.Passage.value
+                rewards[agent.agent_id] += float(constants.StateReward.CollectItem.value) - 0.01 *(curr_step_count-curr_items[agent.position])
                 del curr_items[agent.position]
-                rewards[agent.agent_id] += constants.StateReward.CollectItem.value
 
         # Explode bombs.
         next_bombs = []
