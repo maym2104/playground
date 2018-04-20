@@ -52,13 +52,12 @@ class Pomme(gym.Env):
         self._is_partially_observable = is_partially_observable
 
         self.training_agent = None
-        f=open(kwargs.get("data_file", None))
-        self.obs_reader=csv.DictReader(f)
-        # header=self.obs_reader.next()
-        n=random.randint(1, 14e4)
-        for i in range(n):
-            self.current_obs_row=next(self.obs_reader)
-        self.obs_start_time=int(self.current_obs_row['t'])
+        self.obs_filename=kwargs.get("data_file", None)
+        self.obs_file_handle=open(self.obs_filename)
+        self.obs_reader=None
+        self.current_obs_row=None
+        self.obs_start_time=None
+        
 
 
         self.model = forward_model.ForwardModel()
@@ -164,6 +163,13 @@ class Pomme(gym.Env):
                 col = pos[1][0]
                 agent.set_start_position((row, col))
                 agent.reset()
+            self.obs_file_handle.close()
+            self.obs_file_handle=open(self.obs_filename)
+            self.obs_reader=csv.DictReader(self.obs_file_handle)
+            n=random.randint(1, 14e4)
+            for i in range(n):
+                self.current_obs_row=next(self.obs_reader)
+            self.obs_start_time=int(self.current_obs_row['t'])
 
         return self.get_observations()
 
