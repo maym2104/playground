@@ -7,7 +7,8 @@ import calendar, time
 
 NO_OF_ROWS=13
 NO_OF_COLUMNS=13
-TIME_FRAMES=100000
+TIME_FRAMES=10000000
+TRAIN_TEST_DIV=0.8
 
 incident_data = r'fd_incidents_past_12_mo_datasd.csv'
 conversion_data= r'zip_codes_states.csv'
@@ -77,4 +78,8 @@ i_d['t']=machinetime_to_discretetime
 # 		longi.append("")
 
 i_d=i_d.sort_values(by=['response_machinetime'])
-i_d.to_csv('out.csv')
+training=pd.DataFrame()
+testing=pd.DataFrame()
+training, testing = i_d[:int(TRAIN_TEST_DIV*len(i_d))], i_d[int(TRAIN_TEST_DIV*len(i_d)):]
+training.to_csv('../training.csv')
+testing.to_csv('../testing.csv')
