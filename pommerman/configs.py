@@ -33,7 +33,7 @@ def firetruck_v0_env():
         'num_items': 0,
         'max_steps': 10000,
         'render_fps': 100,
-        'data_file': "out.csv",
+        'data_file': "training.csv",
     }
     agent = characters.Bomber
     return locals()

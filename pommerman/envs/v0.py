@@ -166,7 +166,7 @@ class Pomme(gym.Env):
             self.obs_file_handle.close()
             self.obs_file_handle=open(self.obs_filename)
             self.obs_reader=csv.DictReader(self.obs_file_handle)
-            n=random.randint(1, 14e4)
+            n=random.randint(1, 11e4)
             for i in range(n):
                 self.current_obs_row=next(self.obs_reader)
             self.obs_start_time=int(self.current_obs_row['t'])
