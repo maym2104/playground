@@ -65,7 +65,7 @@ def main():
     parser.add_argument("--game", default="pommerman", help="Game to choose.")
     parser.add_argument(
         "--config",
-        default="PommeFFACompetition-v0",
+        default="PommeFFANHWC-v0",
         help="Configuration to execute. See env_ids in "
         "configs.py for options.")
     parser.add_argument(
@@ -94,7 +94,7 @@ def main():
         "the game. Doesn't record if None.")
     parser.add_argument(
         "--render",
-        default=False,
+        default=True,
         action='store_true',
         help="Whether to render or not. Defaults to False.")
     parser.add_argument(
@@ -126,20 +126,21 @@ def main():
             env.set_training_agent(agent.agent_id)
             break
 
-    if args.record_pngs_dir:
-        assert not os.path.isdir(args.record_pngs_dir)
-        os.makedirs(args.record_pngs_dir)
-    if args.record_json_dir:
-        assert not os.path.isdir(args.record_json_dir)
-        os.makedirs(args.record_json_dir)
+    if record_pngs_dir:
+        assert not os.path.isdir(record_pngs_dir)
+        os.makedirs(record_pngs_dir)
+    if record_json_dir:
+        assert not os.path.isdir(record_json_dir)
+        os.makedirs(record_json_dir)
 
     # Create a Proximal Policy Optimization agent
     agent = training_agent.initialize(env)
-
+    #agent.restore_model("../params")
     atexit.register(functools.partial(clean_up_agents, agents))
     wrapped_env = WrappedEnv(env, visualize=args.render)
     runner = Runner(agent=agent, environment=wrapped_env)
     runner.run(episodes=10, max_episode_timesteps=2000)
+    agent.save_model("../params/ppo")
     print("Stats: ", runner.episode_rewards, runner.episode_timesteps,
           runner.episode_times)
 

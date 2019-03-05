@@ -6,7 +6,7 @@ from .. import characters
 
 
 class TensorForceAgent(BaseAgent):
-    """The TensorForceAgent. Acts through the algorith, not here."""
+    """The TensorForceAgent. Acts through the algorithm, not here."""
 
     def __init__(self, character=characters.Bomber, algorithm='ppo'):
         super(TensorForceAgent, self).__init__(character)
@@ -36,8 +36,10 @@ class TensorForceAgent(BaseAgent):
                 states=dict(type='float', shape=env.observation_space.shape),
                 actions=actions,
                 network=[
-                    dict(type='dense', size=64),
-                    dict(type='dense', size=64)
+                    dict(type='conv2d', size=32, window=5, activation='relu'),
+                    dict(type='conv2d', size=16, window=3, activation='relu'),
+                    dict(type='flatten'),
+                    dict(type='dense', size=256, activation='relu')
                 ],
                 batching_capacity=1000,
                 step_optimizer=dict(type='adam', learning_rate=1e-4))
