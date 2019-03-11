@@ -16,7 +16,7 @@ class TensorForceAgent(BaseAgent):
         """This agent has its own way of inducing actions. See train_with_tensorforce."""
         return None
 
-    def initialize(self, env):
+    def initialize(self, env, lstm=False):
         from gym import spaces
         from tensorforce.agents import PPOAgent
 
@@ -32,15 +32,20 @@ class TensorForceAgent(BaseAgent):
             else:
                 actions = dict(type='int', num_actions=env.action_space.n)
 
-            return PPOAgent(
-                states=dict(type='float', shape=env.observation_space.shape),
-                actions=actions,
-                network=[
+            network = [
                     dict(type='conv2d', size=32, window=5, activation='relu'),
                     dict(type='conv2d', size=16, window=3, activation='relu'),
                     dict(type='flatten'),
                     dict(type='dense', size=256, activation='relu')
-                ],
+                ]
+
+            if lstm:
+                network.append(dict(type='internal_lstm', size=256))
+
+            return PPOAgent(
+                states=dict(type='float', shape=env.observation_space.shape),
+                actions=actions,
+                network=network,
                 batching_capacity=1000,
                 step_optimizer=dict(type='adam', learning_rate=1e-4))
         return None

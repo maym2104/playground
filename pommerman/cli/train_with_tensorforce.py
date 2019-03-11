@@ -102,6 +102,16 @@ def main():
         default=None,
         help="File from which to load game state. Defaults to "
         "None.")
+    parser.add_argument(
+        "--testing",
+        default=False,
+        action='store_true',
+        help="Test mode for the trained/training agent or not. Defaults to False (i.e. training mode).")
+    parser.add_argument(
+        "--lstm",
+        default=True,
+        action='store_true',
+        help="Test mode for the trained/training agent or not. Defaults to False (i.e. training mode).")
     args = parser.parse_args()
 
     config = args.config
@@ -134,12 +144,12 @@ def main():
         os.makedirs(record_json_dir)
 
     # Create a Proximal Policy Optimization agent
-    agent = training_agent.initialize(env)
+    agent = training_agent.initialize(env, lstm=args.lstm)
     #agent.restore_model("../params")
     atexit.register(functools.partial(clean_up_agents, agents))
     wrapped_env = WrappedEnv(env, visualize=args.render)
     runner = Runner(agent=agent, environment=wrapped_env)
-    runner.run(episodes=10, max_episode_timesteps=2000)
+    runner.run(num_episodes=1000, max_episode_timesteps=2000, testing=args.testing)
     agent.save_model("../params/ppo")
     print("Stats: ", runner.episode_rewards, runner.episode_timesteps,
           runner.episode_times)
