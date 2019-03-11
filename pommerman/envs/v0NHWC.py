@@ -75,7 +75,7 @@ class Pomme(gym.Env):
     def _set_observation_space(self):
         """The Observation Space for each agent, shaped as an image.
 
-        There are a total of 9*board_size^2 observations:
+        There are a total of (14+8)*board_size^2 observations:
         - all of the board (board_size^2)
         - bomb blast strength (board_size^2).
         - bomb life (board_size^2)
@@ -87,8 +87,9 @@ class Pomme(gym.Env):
         - enemies (equals to sum of three of {AgentDummy.value, Agent3.value}).
         """
         bss = self._board_size**2
-        min_obs = [0] * 9 * bss
-        max_obs = [len(constants.Item)] * bss + [self._board_size
+        num_feat_channels = len(constants.Item) + 8
+        min_obs = [0] * num_feat_channels * bss
+        max_obs = [1] * len(constants.Item) * bss + [self._board_size
                                                 ] * bss + [25] * bss
         max_obs += [1] * bss + [self._num_items] * 2 * bss + [1] * bss
         max_obs += [1] * 2 * bss
@@ -96,8 +97,8 @@ class Pomme(gym.Env):
         low = np.array(min_obs)
         high = np.array(max_obs)
 
-        low = np.reshape(low, newshape=(9, self._board_size, self._board_size))    # CHW
-        high = np.reshape(high, newshape=(9, self._board_size, self._board_size))  # CHW
+        low = np.reshape(low, newshape=(num_feat_channels, self._board_size, self._board_size))    # CHW
+        high = np.reshape(high, newshape=(num_feat_channels, self._board_size, self._board_size))  # CHW
         low = np.transpose(low, axes=(1, 2, 0))    # HWC
         high = np.transpose(high, axes=(1, 2, 0))  # HWC
         self.observation_space = spaces.Box(
@@ -288,25 +289,14 @@ class Pomme(gym.Env):
             agent.shutdown()
 
     @staticmethod
-    def featurize_old(obs):
-        board = obs["board"].reshape(-1).astype(np.float32)
-        bomb_blast_strength = obs["bomb_blast_strength"].reshape(-1) \
-                                                        .astype(np.float32)
-        bomb_life = obs["bomb_life"].reshape(-1).astype(np.float32)
-        position = utility.make_np_float(obs["position"])
-        ammo = utility.make_np_float([obs["ammo"]])
-        blast_strength = utility.make_np_float([obs["blast_strength"]])
-        can_kick = utility.make_np_float([obs["can_kick"]])
-
-        teammate = utility.make_np_float([obs["teammate"].value])
-        enemies = utility.make_np_float([e.value for e in obs["enemies"]])
-        return np.concatenate(
-            (board, bomb_blast_strength, bomb_life, position, ammo,
-             blast_strength, can_kick, teammate, enemies))
-
-    @staticmethod
     def featurize(obs):
         board = obs["board"].astype(np.float32)
+        one_hot_board = np.zeros(board.shape + [len(constants.Item)])
+        one_hot_board = np.reshape(one_hot_board, [-1, len(constants.Item)])
+        flatten_board = np.reshape(board, -1)
+        one_hot_board[np.arange(flatten_board.shape[0]), flatten_board] = 1.
+        one_hot_board = np.reshape(one_hot_board, board.shape + [len(constants.Item)])
+
         bomb_blast_strength = obs["bomb_blast_strength"].astype(np.float32)
         bomb_life = obs["bomb_life"].astype(np.float32)
 
@@ -331,9 +321,12 @@ class Pomme(gym.Env):
         for e in obs["enemies"]:
             enemies[board == e.value] = 1.
 
-        return np.stack(
-            (board, bomb_blast_strength, bomb_life, position, ammo,
+        obs_space = np.stack(
+            (bomb_blast_strength, bomb_life, position, ammo,
              blast_strength, can_kick, teammate, enemies), axis=-1)
+        obs_space = np.concatenate((one_hot_board, obs_space), axis=-1)
+
+        return obs_space
 
     def save_json(self, record_json_dir):
         info = self.get_json_info()
