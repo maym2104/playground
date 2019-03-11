@@ -57,6 +57,26 @@ def ffa_NHWC_env():
     return locals()
 
 
+def ffa_NHWC_no_wood_env():
+    """Start up a FFA config with the competition settings. Using NHWC observations."""
+    env = envs.v0NHWC.Pomme
+    game_type = constants.GameType.FFA
+    env_entry_point = 'pommerman.envs.v0NHWC:Pomme'
+    env_id = 'PommeFFANHWC-NoWood-v0'
+    env_kwargs = {
+        'game_type': game_type,
+        'board_size': constants.BOARD_SIZE,
+        'num_rigid': constants.NUM_RIGID,
+        'num_wood': 0,
+        'num_items': 0,
+        'max_steps': constants.MAX_STEPS,
+        'render_fps': constants.RENDER_FPS,
+        'env': env_entry_point,
+    }
+    agent = characters.Bomber
+    return locals()
+
+
 def ffa_competition_fast_env():
     """Start up a FFA config with the competition settings."""
     env = envs.v0.Pomme
@@ -93,6 +113,28 @@ def team_competition_env():
         'render_fps': constants.RENDER_FPS,
         'agent_view_size': constants.AGENT_VIEW_SIZE,
         'is_partially_observable': True,
+        'env': env_entry_point,
+    }
+    agent = characters.Bomber
+    return locals()
+
+
+def team_NHWC_env():
+    """Start up a Team config with the competition settings."""
+    env = envs.v0NHWC.Pomme
+    game_type = constants.GameType.Team
+    env_entry_point = 'pommerman.envs.v0NHWC:Pomme'
+    env_id = 'PommeTeamNHWC-v0'
+    env_kwargs = {
+        'game_type': game_type,
+        'board_size': constants.BOARD_SIZE,
+        'num_rigid': constants.NUM_RIGID,
+        'num_wood': constants.NUM_WOOD,
+        'num_items': constants.NUM_ITEMS,
+        'max_steps': constants.MAX_STEPS,
+        'render_fps': constants.RENDER_FPS,
+        'agent_view_size': constants.AGENT_VIEW_SIZE,
+        'is_partially_observable': False,
         'env': env_entry_point,
     }
     agent = characters.Bomber
