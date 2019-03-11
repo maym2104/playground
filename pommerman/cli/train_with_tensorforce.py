@@ -94,7 +94,7 @@ def main():
         "the game. Doesn't record if None.")
     parser.add_argument(
         "--render",
-        default=True,
+        default=False,
         action='store_true',
         help="Whether to render or not. Defaults to False.")
     parser.add_argument(
@@ -103,15 +103,20 @@ def main():
         help="File from which to load game state. Defaults to "
         "None.")
     parser.add_argument(
+        "--params_dir",
+        default="ppo",
+        help="Directory in which to save the params and from which load to. Defaults to None"
+        "None.")
+    parser.add_argument(
         "--testing",
         default=False,
         action='store_true',
         help="Test mode for the trained/training agent or not. Defaults to False (i.e. training mode).")
     parser.add_argument(
         "--lstm",
-        default=True,
+        default=False,
         action='store_true',
-        help="Test mode for the trained/training agent or not. Defaults to False (i.e. training mode).")
+        help="Whether to add an (internal) LSTM layer to the model.")
     args = parser.parse_args()
 
     config = args.config
@@ -119,6 +124,7 @@ def main():
     record_json_dir = args.record_json_dir
     agent_env_vars = args.agent_env_vars
     game_state_file = args.game_state_file
+    params_dir = "../params/{}".format(args.params_dir)
 
     # TODO: After https://github.com/MultiAgentLearning/playground/pull/40
     #       this is still missing the docker_env_dict parsing for the agents.
@@ -145,12 +151,13 @@ def main():
 
     # Create a Proximal Policy Optimization agent
     agent = training_agent.initialize(env, lstm=args.lstm)
-    #agent.restore_model("../params")
+    if os.path.isdir(params_dir):
+        agent.restore_model(params_dir)
     atexit.register(functools.partial(clean_up_agents, agents))
     wrapped_env = WrappedEnv(env, visualize=args.render)
     runner = Runner(agent=agent, environment=wrapped_env)
     runner.run(num_episodes=1000, max_episode_timesteps=2000, testing=args.testing)
-    agent.save_model("../params/ppo")
+    agent.save_model("{}/params".format(params_dir))
     print("Stats: ", runner.episode_rewards, runner.episode_timesteps,
           runner.episode_times)
 

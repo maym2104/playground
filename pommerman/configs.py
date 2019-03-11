@@ -62,7 +62,7 @@ def ffa_NHWC_no_wood_env():
     env = envs.v0NHWC.Pomme
     game_type = constants.GameType.FFA
     env_entry_point = 'pommerman.envs.v0NHWC:Pomme'
-    env_id = 'PommeFFANHWC-NoWood-v0'
+    env_id = 'PommeFFANHWCnoWood-v0'
     env_kwargs = {
         'game_type': game_type,
         'board_size': constants.BOARD_SIZE,
