@@ -290,19 +290,19 @@ class Pomme(gym.Env):
 
     @staticmethod
     def featurize(obs):
-        board = obs["board"].astype(np.float32)
-        one_hot_board = np.zeros(board.shape + [len(constants.Item)])
+        board = obs["board"]
+        one_hot_board = np.zeros(board.shape + (len(constants.Item),))
         one_hot_board = np.reshape(one_hot_board, [-1, len(constants.Item)])
         flatten_board = np.reshape(board, -1)
         one_hot_board[np.arange(flatten_board.shape[0]), flatten_board] = 1.
-        one_hot_board = np.reshape(one_hot_board, board.shape + [len(constants.Item)])
+        one_hot_board = np.reshape(one_hot_board, board.shape + (len(constants.Item),))
 
         bomb_blast_strength = obs["bomb_blast_strength"].astype(np.float32)
         bomb_life = obs["bomb_life"].astype(np.float32)
 
         # TODO: tile or look at broadcast rules
         #position = utility.make_np_float(obs["position"])
-        position = np.zeros_like(board)
+        position = np.zeros_like(board, dtype='float32')
         position[obs["position"]] = 1.
         ammo = utility.make_np_float([obs["ammo"]])
         ammo = np.broadcast_to(ammo, board.shape)
@@ -314,7 +314,7 @@ class Pomme(gym.Env):
         #teammate = utility.make_np_float([obs["teammate"].value])
         #enemies = utility.make_np_float([e.value for e in obs["enemies"]])
 
-        teammate = np.zeros_like(board)
+        teammate = np.zeros_like(board, dtype='float32')
         teammate[board == obs["teammate"].value] = 1.
 
         enemies = np.zeros_like(board)

@@ -33,6 +33,7 @@ class TensorForceAgent(BaseAgent):
                 actions = dict(type='int', num_actions=env.action_space.n)
 
             network = [
+                    dict(type='conv2d', size=10, window=1, activation='relu'),
                     dict(type='conv2d', size=32, window=5, activation='relu'),
                     dict(type='conv2d', size=16, window=3, activation='relu'),
                     dict(type='flatten'),
