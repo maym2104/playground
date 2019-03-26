@@ -132,7 +132,11 @@ class ForwardModel(object):
              max_blast_strength=10):
         board_size = len(curr_board)
 
-        # Tick the flames. Replace any dead ones with passages. If there is an
+
+        # Generate rewards for agents.
+        rewards = dict([(agent.agent_id, 0) for agent in curr_agents])
+
+        # Tick the flames. Replace any dead ones with passages. If there is an 
         # item there, then reveal that item.
         flames = []
         for flame in curr_flames:
@@ -305,6 +309,8 @@ class ForwardModel(object):
             # The agent_list should contain a single element at this point.
             assert (len(agent_list) == 1)
             num_agent, agent = agent_list[0]
+            # TODO fix curr_step_count
+            rewards[agent.agent_id] += float(constants.StateReward.CollectItem.value) #- 0.01 *(curr_step_count-curr_items[agent.position])
 
             if desired_position == agent.position:
                 # Agent did not move
@@ -429,8 +435,10 @@ class ForwardModel(object):
         # Explode bombs.
         exploded_map = np.zeros_like(curr_board)
         has_new_explosions = False
+        before_bombs = curr_bombs[:]
 
         for bomb in curr_bombs:
+            bomb.exploded_map = np.zeros_like(curr_board).astype(int)
             bomb.tick()
             if bomb.exploded():
                 has_new_explosions = True
@@ -455,10 +463,13 @@ class ForwardModel(object):
                             break
                         if curr_board[r][c] == constants.Item.Rigid.value:
                             break
+                        bomb.exploded_map[r][c] = 1
                         exploded_map[r][c] = 1
                         if curr_board[r][c] == constants.Item.Wood.value:
+                            rewards[bomb.bomber.agent_id] += constants.StateReward.BreakWood.value
                             break
 
+            # Remove bombs that were in the blast radius.
             curr_bombs = next_bombs
             for bomb in curr_bombs:
                 if bomb.in_range(exploded_map):
@@ -480,10 +491,14 @@ class ForwardModel(object):
         for agent in alive_agents:
             if curr_board[agent.position] == constants.Item.Flames.value:
                 agent.die()
+                rewards[agent.agent_id] += constants.StateReward.Killed.value
+                for bomb in before_bombs:
+                    if agent.in_range(bomb.exploded_map) and agent.agent_id != bomb.bomber.agent_id:
+                        rewards[bomb.bomber.agent_id] += constants.StateReward.Kill.value
             else:
                 curr_board[agent.position] = utility.agent_value(agent.agent_id)
 
-        return curr_board, curr_agents, curr_bombs, curr_items, curr_flames
+        return curr_board, curr_agents, curr_bombs, curr_items, curr_flames, rewards
 
     def get_observations(self, curr_board, agents, bombs,
                          is_partially_observable, agent_view_size, 

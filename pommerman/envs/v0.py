@@ -145,9 +145,10 @@ class Pomme(gym.Env):
             obs['step_count'] = self._step_count
         return self.observations
 
-    def _get_rewards(self):
-        return self.model.get_rewards(self._agents, self._game_type,
-                                      self._step_count, self._max_steps)
+    def _get_rewards(self, rewards):
+        # return self.model.get_rewards(self._agents, self._game_type,
+        #                               self._step_count, self._max_steps)
+        return list(rewards.values())
 
     def _get_done(self):
         return self.model.get_done(self._agents, self._step_count,
@@ -196,10 +197,10 @@ class Pomme(gym.Env):
             max_blast_strength=max_blast_strength)
         self._board, self._agents, self._bombs, self._items, self._flames = \
                                                                     result[:5]
-
+        rewards = result[-1]
         done = self._get_done()
         obs = self.get_observations()
-        reward = self._get_rewards()
+        reward = self._get_rewards(rewards)
         info = self._get_info(done, reward)
 
         if done:

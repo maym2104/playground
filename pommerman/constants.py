@@ -126,6 +126,12 @@ class Result(Enum):
     Tie = 2
     Incomplete = 3
 
+class StateReward(Enum):
+    BreakWood = 0.02
+    CollectItem = 1
+    Kill = 0.4
+    LastStanding = 1.0
+    Killed = -1.0
 
 class InvalidAction(Exception):
     '''Invalid Actions Exception'''
