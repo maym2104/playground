@@ -27,6 +27,13 @@ class Bomber(object):
                 for id_ in range(4)
                 if id_ != agent_id
             ]
+        elif self._game_type == constants.GameType.OneVsOne:
+            self.teammate = constants.Item.AgentDummy
+            self.enemies = [
+                getattr(constants.Item, 'Agent%d' % id_)
+                for id_ in range(2)
+                if id_ != agent_id
+            ]
         else:
             teammate_id = (agent_id + 2) % 4
             self.teammate = getattr(constants.Item, 'Agent%d' % teammate_id)
@@ -159,13 +166,13 @@ class Flame(object):
 
     def __init__(self, position, life=2):
         self.position = position
-        self._life = life
+        self.life = life
 
     def tick(self):
-        self._life -= 1
+        self.life -= 1
 
     def is_dead(self):
-        return self._life == 0
+        return self.life == 0
 
     def to_json(self):
-        return {"position": self.position, "life": self._life}
+        return {"position": self.position, "life": self.life}
